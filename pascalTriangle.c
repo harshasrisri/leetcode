@@ -6,8 +6,8 @@
 #include <stdlib.h>
 
 int** generate(int numRows, int** columnSizes, int* returnSize) {
-    int **ret = (int **) malloc (numRows * sizeof(int*)), i, j;
-	int *cols = (int *) malloc (numRows * sizeof(int));
+    int **ret = (int **) calloc (numRows, sizeof(int*)), i, j;
+	int *cols = (int *) calloc (numRows, sizeof(int));
     *returnSize = 0;
     
     for (i = 0; i < numRows; i++) {
@@ -18,8 +18,18 @@ int** generate(int numRows, int** columnSizes, int* returnSize) {
         for (j = 1; j <= i/2; j++) {
             ret[i][j] = ret[i][i-j] = ret[i-1][j-1] + ret[i-1][j];
 		}
-    }
+	}
+ 	
 	*columnSizes = cols;
+
+	for (i = 0; i < numRows; i++) {
+	    printf ("%p : ", &cols[i]);
+	    for (j = 0; j < cols[i]; j++) {
+	        printf ("%d ", ret[i][j]);
+	    }
+	    printf ("\n");
+	}   
+
     return ret;
 }
 
@@ -29,6 +39,7 @@ int main (int argc, char **argv) {
 	/* for (i = 0; i <= atoi(argv[1]); i++) { */
 		ret = generate(i, &columnSizes, &returnSize);
 		for (j = 0; j < i; j++) {
+			printf ("%p : ", &columnSizes[j]);
 			for (k = 0; k < columnSizes[j]; k++)
 				printf ("%d ", ret[j][k]);
 			printf ("\n");
